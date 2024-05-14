@@ -84,8 +84,31 @@ class UserController extends Controller
         }
     }
 
-    public function update()
+    public function edit($id)
     {
-        // TODO: Implement update() method.
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (
+                isset($_POST['name']) &&
+                isset($_POST['email']) &&
+                isset($_POST['no_telp']) &&
+                isset($_POST['address']) &&
+                isset($_POST['role']) &&
+                isset($_POST['token'])
+            ) {
+                $id_card = isset($_FILES['id_card']) ? $_FILES['id_card'] : null;
+                $data = $this->repository('UserRepository')->update($id, $_POST, $id_card);
+                http_response_code($data["code"]);
+                $response = new Response($data['message'], $data['data'] ?? null);
+                echo $response->send();
+            } else {
+                http_response_code(400);
+                $response = new Response('All fields is required');
+                echo $response->send();
+            }
+        } else {
+            http_response_code(405);
+            $response = new Response('Method not allowed, please use POST');
+            echo $response->send();
+        }
     }
 }

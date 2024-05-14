@@ -3,6 +3,7 @@
 final class UserRepository
 {
   private $table = 'tb_users';
+  private $role = ["admin", "user"];
   private $db;
 
   public function __construct()
@@ -42,38 +43,43 @@ final class UserRepository
     $result = array();
 
     if ($this->isEmailAvailable($data['email'])) {
-      $id_card_desc = $this->saveIdCard($id_card);
+      if (in_array($data['role'], $this->role)) {
+        $id_card_desc = $this->saveIdCard($id_card);
 
-      if (isset($id_card_desc['path'])) {
-        $password = password_hash($data['password'], PASSWORD_BCRYPT);
-        $token = md5(md5(md5($data['email']) . $data['role']) . $password);
+        if (isset($id_card_desc['path'])) {
+          $password = password_hash($data['password'], PASSWORD_BCRYPT);
+          $token = md5(md5(md5($data['email']) . $data['role']) . $password);
 
-        $this->db->query(
-          "INSERT INTO {$this->table} 
+          $this->db->query(
+            "INSERT INTO {$this->table} 
         (name, email, password, no_telp, id_card, address, role, token) 
         VALUES (:name, :email, :password, :no_telp, :id_card, :address, :role, :token)"
-        );
+          );
 
-        $this->db->bind('name', $data['name']);
-        $this->db->bind('email', $data['email']);
-        $this->db->bind('password', $password);
-        $this->db->bind('no_telp', $data['no_telp']);
-        $this->db->bind('id_card', $id_card_desc['path']);
-        $this->db->bind('address', $data['address']);
-        $this->db->bind('role', $data['role']);
-        $this->db->bind('token', $token);
-        $this->db->execute();
+          $this->db->bind('name', $data['name']);
+          $this->db->bind('email', $data['email']);
+          $this->db->bind('password', $password);
+          $this->db->bind('no_telp', $data['no_telp']);
+          $this->db->bind('id_card', $id_card_desc['path']);
+          $this->db->bind('address', $data['address']);
+          $this->db->bind('role', $data['role']);
+          $this->db->bind('token', $token);
+          $this->db->execute();
 
-        if ($this->db->rowCount() > 0) {
-          $result['code'] = 200;
-          $result['message'] = "Register success.";
+          if ($this->db->rowCount() > 0) {
+            $result['code'] = 200;
+            $result['message'] = "Register success.";
+          } else {
+            $result['code'] = 400;
+            $result['message'] = "Register failed.";
+          }
         } else {
           $result['code'] = 400;
-          $result['message'] = "Register failed.";
+          $result['message'] = "Unknown path";
         }
       } else {
         $result['code'] = 400;
-        $result['message'] = "Unknown path";
+        $result['message'] = "Role is unavailable.";
       }
     } else {
       $result['code'] = 400;
@@ -109,9 +115,77 @@ final class UserRepository
     return $result;
   }
 
-  public function updateUser($data)
+  public function update($id, $data, $id_card)
   {
-    // TODO: Implement updateUser() method.
+    $result = array();
+
+    if ($data['token'] === $this->getToken($id)) {
+      if (in_array($data['role'], $this->role)) {
+        if ($id_card !== null) {
+          $this->deleteIdCard($id);
+
+          $id_card_desc = $this->saveIdCard($id_card);
+
+          if (isset($id_card_desc['path'])) {
+            $this->db->query(
+              "UPDATE {$this->table} 
+             SET name=:name, email=:email, no_telp=:no_telp, id_card=:id_card, address=:address, role=:role
+             WHERE id=:id"
+            );
+
+            $this->db->bind('name', $data['name']);
+            $this->db->bind('email', $data['email']);
+            $this->db->bind('no_telp', $data['no_telp']);
+            $this->db->bind('id_card', $id_card_desc['path']);
+            $this->db->bind('address', $data['address']);
+            $this->db->bind('role', $data['role']);
+            $this->db->bind('id', $id);
+            $this->db->execute();
+
+            if ($this->db->rowCount() > 0) {
+              $result['code'] = 200;
+              $result['message'] = "Update success.";
+            } else {
+              $result['code'] = 400;
+              $result['message'] = "Update failed.";
+            }
+          } else {
+            $result['code'] = 400;
+            $result['message'] = "Unknown path";
+          }
+        } else {
+          $this->db->query(
+            "UPDATE {$this->table} 
+           SET name=:name, email=:email, no_telp=:no_telp, address=:address, role=:role
+           WHERE id=:id"
+          );
+
+          $this->db->bind('name', $data['name']);
+          $this->db->bind('email', $data['email']);
+          $this->db->bind('no_telp', $data['no_telp']);
+          $this->db->bind('address', $data['address']);
+          $this->db->bind('role', $data['role']);
+          $this->db->bind('id', $id);
+          $this->db->execute();
+
+          if ($this->db->rowCount() > 0) {
+            $result['code'] = 200;
+            $result['message'] = "Update success.";
+          } else {
+            $result['code'] = 400;
+            $result['message'] = "Update failed.";
+          }
+        }
+      } else {
+        $result['code'] = 400;
+        $result['message'] = "Role is unavailable.";
+      }
+    } else {
+      $result['code'] = 401;
+      $result['message'] = "You're unauthorize to this request.";
+    }
+
+    return $result;
   }
 
   private function isEmailAvailable($email)
@@ -138,9 +212,10 @@ final class UserRepository
     return $this->db->rowCount() > 0;
   }
 
-  private function getToken($email){
-    $this->db->query("SELECT token FROM {$this->table} WHERE email=:email");
-    $this->db->bind('email', $email);
+  private function getToken($id)
+  {
+    $this->db->query("SELECT token FROM {$this->table} WHERE id=:id");
+    $this->db->bind('id', $id);
     $result = $this->db->single();
     return isset($result['token']) ? $result['token'] : null;
   }
@@ -152,5 +227,18 @@ final class UserRepository
       $result['path'] = '/storage/user/' . date('YmdHis') . $id_card['name'];
     }
     return $result;
+  }
+
+  private function deleteIdCard($id)
+  {
+    $this->db->query("SELECT id_card FROM {$this->table} WHERE id=:id");
+    $this->db->bind('id', $id);
+    $data = $this->db->single();
+    if (isset($data['id_card'])) {
+      $id_card = $data['id_card'];
+      if (file_exists(__DIR__ . '/../../api/' . $id_card)) {
+        unlink(__DIR__ . '/../../api/' . $id_card);
+      }
+    }
   }
 }
