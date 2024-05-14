@@ -26,10 +26,22 @@ class UserController extends Controller
 
     public function login()
     {
-        $data = $this->repository('UserRepository')->login($_POST);
-        http_response_code($data["code"]);
-        $response = new Response($data['message']);
-        echo $response->send();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['email']) && isset($_POST['password'])) {
+                $data = $this->repository('UserRepository')->login($_POST);
+                http_response_code($data["code"]);
+                $response = new Response($data['message'], $data['data'] ?? null);
+                echo $response->send();
+            } else {
+                http_response_code(400);
+                $response = new Response('Email and password are required');
+                echo $response->send();
+            }
+        } else {
+            http_response_code(405);
+            $response = new Response('Method not allowed, please use POST');
+            echo $response->send();
+        }
     }
 
     public function register()
@@ -52,7 +64,7 @@ class UserController extends Controller
                         echo $response->send();
                     } else {
                         http_response_code(400);
-                        $response = new Response("Accepted id card file is only pdf.");
+                        $response = new Response("Accepted ID card file is only PDF.");
                         echo $response->send();
                     }
                 } else {
@@ -62,7 +74,7 @@ class UserController extends Controller
                 }
             } else {
                 http_response_code(400);
-                $response = new Response('Required path parameter is not complete.');
+                $response = new Response('All fields are required');
                 echo $response->send();
             }
         } else {

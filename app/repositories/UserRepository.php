@@ -14,12 +14,17 @@ final class UserRepository
   {
     $result = array();
 
-    $stored_password = $this->getPassword($data['username']);
+    $stored_password = $this->getPassword($data['email']);
 
-    if (isset($stored_password['password'])) {
-      if (password_verify($data['password'], $stored_password['password'])) {
+    if (isset($stored_password)) {
+      if (password_verify($data['password'], $stored_password)) {
+        $this->db->query("SELECT id, name, email, no_telp, id_card, role, token FROM {$this->table} WHERE email=:email");
+        $this->db->bind('email', $data['email']);
+        $data = $this->db->single();
+
         $result["code"] = 200;
         $result["message"] = "Login success.";
+        $result['data'] = $data;
       } else {
         $result["code"] = 400;
         $result["message"] = "Username or password isn't correct.";
@@ -117,11 +122,12 @@ final class UserRepository
     return $this->db->rowCount() <= 0;
   }
 
-  private function getPassword($id)
+  private function getPassword($email)
   {
-    $this->db->query("SELECT password FROM {$this->table} WHERE id=:id");
-    $this->db->bind('id', $id);
-    return $this->db->single();
+    $this->db->query("SELECT password FROM {$this->table} WHERE email=:email");
+    $this->db->bind('email', $email);
+    $result = $this->db->single();
+    return isset($result['password']) ? $result['password'] : null;
   }
 
   private function isTokenValid($token)
@@ -130,6 +136,13 @@ final class UserRepository
     $this->db->bind('token', $token);
     $this->db->execute();
     return $this->db->rowCount() > 0;
+  }
+
+  private function getToken($email){
+    $this->db->query("SELECT token FROM {$this->table} WHERE email=:email");
+    $this->db->bind('email', $email);
+    $result = $this->db->single();
+    return isset($result['token']) ? $result['token'] : null;
   }
 
   private function saveIdCard($id_card)
