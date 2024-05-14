@@ -58,6 +58,7 @@ class Database
       $this->stmt->execute();
     } catch (PDOException $e) {
       include_once __DIR__ . '/../models/Response.php';
+      http_response_code(400);
       $response = new Response($e->getMessage());
       echo $response->send();
     }
