@@ -8,7 +8,7 @@ class EmployeeController extends Controller
   {
     $data = $this->repository('EmployeeRepository')->getAll();
     http_response_code($data["code"]);
-    $response = new Response($data['message'], $data['data']);
+    $response = new Response($data['message'], $data['data'] ?? null);
     echo $response->send();
   }
 
@@ -16,7 +16,7 @@ class EmployeeController extends Controller
   {
     $data = $this->repository('EmployeeRepository')->getByUserId($id);
     http_response_code($data["code"]);
-    $response = new Response($data['message'], $data['data']);
+    $response = new Response($data['message'], $data['data'] ?? null);
     echo $response->send();
   }
 
