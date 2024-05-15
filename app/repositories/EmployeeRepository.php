@@ -61,7 +61,7 @@ final class EmployeeRepository
     $result = array();
     $token = $data['token'] ?? "";
     $role = $this->getRole($token);
-    
+
     if ($role === 'customer' && $this->isTokenValid($data['submitted_by'], $token)) {
       $id_card_desc = $this->saveDoc('id_card', $data['id_card']);
       $complaint_report_desc = $this->saveDoc('complaint_report', $data['complaint_report']);
@@ -99,17 +99,79 @@ final class EmployeeRepository
     return $result;
   }
 
-  public function update($id, $field = null, $data)
+  public function update($id, $data, $field = null)
   {
     $result = array();
-    $role = $this->getRole($data['token']);
-    if ($role !== 'customer' && $field === null) {
-    } else if ($role === 'admin' && $field !== null) {
+    $token = $data['token'] ?? "";
+    $role = $this->getRole($token);
+
+    if (
+      $role === 'customer' &&
+      $field === null &&
+      $this->isTokenValid($data['submitted_by'], $token)
+    ) {
+      $id_card = $data['id_card'] ?? null;
+      $complaint_report = $data['complaint_report'] ?? null;
+      $opt_set_query = "";
+
+      if ($id_card !== null) {
+        $this->deleteDoc($id, 'id_card');
+        $temp = $this->saveDoc('id_card', $id_card);
+        $id_card = $temp['path'] ?? null;
+        $opt_set_query = $opt_set_query . "id_card=:id_card, ";
+      }
+
+      if ($complaint_report  !== null) {
+        $this->deleteDoc($id, 'complaint_report');
+        $temp = $this->saveDoc('complaint_report', $complaint_report);
+        $complaint_report = $temp['path'] ?? null;
+        $opt_set_query = $opt_set_query . "complaint_report=:complaint_report, ";
+      }
+
+      $this->db->query(
+        "UPDATE {$this->table} 
+            SET reporter=:reporter, no_telp=:no_telp, {$opt_set_query} id_number=:id_number
+            WHERE id=:id"
+      );
+
+      $this->db->bind('reporter', $data['reporter']);
+      $this->db->bind('no_telp', $data['no_telp']);
+      if ($id_card !== null) $this->db->bind('id_card', $id_card);
+      if ($complaint_report !== null) $this->db->bind('complaint_report', $complaint_report);
+      $this->db->bind('id_number', $data['id_number']);
+      $this->db->bind('id', $id);
+      $this->db->execute();
+
+      if ($this->db->rowCount() > 0) {
+        $result['code'] = 200;
+        $result['message'] = "Update success.";
+      } else {
+        $result['code'] = 400;
+        $result['message'] = "Update failed.";
+      }
+    } else if (
+      $role === 'admin' &&
+      $field !== null &&
+      $this->isTokenValid($data['submitted_by'], $token)
+    ) {
       $this->db->query("UPDATE {$this->table} SET {$field}=:value WHERE id=:id");
+      $this->db->bind('value', $data[$field]);
+      $this->db->bind('id', $id);
+      $this->db->execute();
+
+      if ($this->db->rowCount() > 0) {
+        $result['code'] = 200;
+        $result['message'] = "Update success.";
+      } else {
+        $result['code'] = 400;
+        $result['message'] = "Update failed.";
+      }
     } else {
       $result['code'] = 401;
       $result['message'] = "Unauthorized";
     }
+
+    return $result;
   }
 
   public function delete($id)
@@ -145,8 +207,9 @@ final class EmployeeRepository
   private function saveDoc($key, $value)
   {
     $result = array();
-    if (move_uploaded_file($value['tmp_name'], __DIR__ . '/../../api/storage/employee_complaints/' . $key . '/' . date('YmdHis') . '_' . $value['name'])) {
-      $result['path'] = "/storage/employee_complaints/{$key}/{date('YmdHis')}_{$value['name']}";
+    $date = date('YmdHis');
+    if (move_uploaded_file($value['tmp_name'], __DIR__ . '/../../api/storage/employee_complaints/' . $key . '/' . $date . '_' . $value['name'])) {
+      $result['path'] = "/storage/employee_complaints/{$key}/{$date}_{$value['name']}";
     }
     return $result;
   }

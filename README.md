@@ -20,7 +20,9 @@ Import the provided [database file](/db_information_service_5_13_24.sql) to set 
 
 ### Get User by ID
 
-Endpoint: `POST /user/{id}`
+#### Endpoint:
+
+`POST /user/{id}`
 
 Retrieve user information based on the provided user ID.
 
@@ -28,7 +30,7 @@ Retrieve user information based on the provided user ID.
 
 | Name | Required | Datatype |
 | :--- | :------: | :------: |
-| id   |  `true`  | number  |
+| id   |  `true`  |  number  |
 
 #### Field
 
@@ -55,7 +57,9 @@ Retrieve user information based on the provided user ID.
 
 ### Login User
 
-Endpoint: `POST /user/login`
+#### Endpoint:
+
+`POST /user/login`
 
 Authenticate a user.
 
@@ -85,7 +89,9 @@ Authenticate a user.
 
 ### Register User
 
-Endpoint: `POST /user/register`
+#### Endpoint:
+
+`POST /user/register`
 
 Register a new user.
 
@@ -112,7 +118,9 @@ Register a new user.
 
 ### Edit User
 
-Endpoint: `POST /user/edit/{id}`
+#### Endpoint:
+
+`POST /user/edit/{id}`
 
 Edit user information.
 
@@ -120,7 +128,7 @@ Edit user information.
 
 | Name | Required | Datatype |
 | :--- | :------: | :------: |
-| id   |  `true`  | number  |
+| id   |  `true`  |  number  |
 
 #### Field
 
@@ -129,7 +137,7 @@ Edit user information.
 | name     |  `true`  | string                       |
 | email    |  `true`  | string                       |
 | no_telp  |  `true`  | string                       |
-| id_card  |  `false`  | File: `pdf`                  |
+| id_card  | `false`  | File: `pdf`                  |
 | password |  `true`  | string                       |
 | address  |  `true`  | string                       |
 | role     |  `true`  | Enum: `"admin"` `"customer"` |
@@ -146,7 +154,9 @@ Edit user information.
 
 ### Get All Employee Complaints
 
-Endpoint: `GET /employee`
+#### Endpoint:
+
+`GET /employee`
 
 Retrieve list of employee complaints.
 
@@ -170,9 +180,11 @@ Retrieve list of employee complaints.
 }
 ```
 
-### Get Employee Complaints by User ID
+### Get Employee Complaint by User ID
 
-Endpoint: `GET /employee/list/{id}`
+#### Endpoint:
+
+`GET /employee/list/{id}`
 
 Retrieve the list of employee complaints for a specific user.
 
@@ -180,7 +192,7 @@ Retrieve the list of employee complaints for a specific user.
 
 | name | Required | Datatype |
 | :--- | :------: | :------: |
-| id   |  `true`  | number  |
+| id   |  `true`  |  number  |
 
 #### Response
 
@@ -202,23 +214,25 @@ Retrieve the list of employee complaints for a specific user.
 }
 ```
 
-### Create Employee Complaints
+### Create Employee Complaint
 
-Endpoint: `POST /employee/create`
+#### Endpoint:
+
+`POST /employee/create`
 
 Create a new employee complaint.
 
 #### Field
 
-| Name | Required | Datatype |
-| --- | :---: | :--- |
-| reporter | `true` | string |
-| no_telp | `true` | string |
-| id_card | `true` | File: `pdf` |
-| id_number | `true` | string |
-| complaint_report | `true` | File: `pdf` |
-| submitted_by | `true` | number |
-| token | `true` | string |
+| Name             | Required | Datatype    |
+| ---------------- | :------: | :---------- |
+| reporter         |  `true`  | string      |
+| no_telp          |  `true`  | string      |
+| id_card          |  `true`  | File: `pdf` |
+| id_number        |  `true`  | string      |
+| complaint_report |  `true`  | File: `pdf` |
+| submitted_by     |  `true`  | number      |
+| token            |  `true`  | string      |
 
 #### Response
 
@@ -229,8 +243,71 @@ Create a new employee complaint.
 }
 ```
 
+### Update Employee Complaint
 
+#### Endpoint:
 
+`POST /employee/edit/{id}`
+
+Update an existing employee complaint.
+
+#### Path Parameter
+
+| Name | Required | Datatype |
+| ---- | :------: | -------- |
+| id   |  `true`  | string   |
+
+#### Field
+
+| Name             | Required | Datatype    |
+| ---------------- | :------: | :---------- |
+| reporter         |  `true`  | string      |
+| no_telp          |  `true`  | string      |
+| id_card          | `false`  | File: `pdf` |
+| id_number        |  `true`  | string      |
+| complaint_report | `false`  | File: `pdf` |
+| submitted_by     |  `true`  | number      |
+| token            |  `true`  | string      |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Update Employee Complaint Status
+
+#### Endpoint:
+
+`POST /employee/edit/{id}/status/{status}`
+
+Update the status of an employee complaint.
+
+#### Path Parameter
+
+| Name   | Required | Datatype                             |
+| ------ | :------: | ------------------------------------ |
+| id     |  `true`  | string                               |
+| status |  `true`  | Enum: `pending` `approve` `rejected` |
+
+#### Field
+
+| Name         | Required | Datatype |
+| ------------ | :------: | :------- |
+| submitted_by |  `true`  | number   |
+| token        |  `true`  | string   |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
 
 ## Contributors
 
