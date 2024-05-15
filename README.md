@@ -309,10 +309,40 @@ Update the status of an employee complaint.
 }
 ```
 
+### Delete Employee Complaint
+
+#### Endpoint:
+
+`POST /employee/delte/{id}`
+
+Delete an employee complaint.
+
+#### Path Parameter
+
+| Name   | Required | Datatype |
+| ------ | :------: | -------- |
+| id     |  `true`  | string   |
+
+#### Field
+
+| Name         | Required | Datatype |
+| ------------ | :------: | :------- |
+| submitted_by |  `true`  | number   |
+| token        |  `true`  | string   |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
 ## Contributors
 
 | [![Revi Wardana Putra](https://avatars.githubusercontent.com/reviwh?s=100)<br /><sub>Revi Wardana Putra</sub>](https://github.com/reviwh) | [![Nathalia Bruno](https://avatars.githubusercontent.com/ihsan005?s=100)<br /><sub>Ihsan Shadiq</sub>](https://github.com/ihsan005) | <img src="https://avatars.githubusercontent.com/IkhsanoMulya" alt="Ikhsano Mulya" width=100 /><br /><sub>[Ikhsano Mulya](https://github.com/IkhsanoMulya)</sub> |
-| :---------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| :---: | :---: | :---: |
 
 ## License
 

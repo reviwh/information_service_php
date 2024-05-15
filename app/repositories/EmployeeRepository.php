@@ -116,14 +116,14 @@ final class EmployeeRepository
       $opt_set_query = "";
 
       if ($id_card !== null) {
-        $this->deleteDoc($id, 'id_card');
+        $this->deleteDoc($this->getDoc($id, 'id_card'));
         $temp = $this->saveDoc('id_card', $id_card);
         $id_card = $temp['path'] ?? null;
         $opt_set_query = $opt_set_query . "id_card=:id_card, ";
       }
 
       if ($complaint_report  !== null) {
-        $this->deleteDoc($id, 'complaint_report');
+        $this->deleteDoc($this->getDoc($id, 'complaint_report'));
         $temp = $this->saveDoc('complaint_report', $complaint_report);
         $complaint_report = $temp['path'] ?? null;
         $opt_set_query = $opt_set_query . "complaint_report=:complaint_report, ";
@@ -162,10 +162,10 @@ final class EmployeeRepository
 
       if ($this->db->rowCount() > 0) {
         $result['code'] = 200;
-        $result['message'] = "Update success.";
+        $result['message'] = "Employee Complaint updated success.";
       } else {
         $result['code'] = 400;
-        $result['message'] = "Update failed.";
+        $result['message'] = "Employee Complaint failed to update.";
       }
     } else {
       $result['code'] = 401;
@@ -180,16 +180,31 @@ final class EmployeeRepository
     $result = array();
     $token = $data['token'];
 
-    $this->db->query("DELETE FROM {$this->table} WHERE id=:id");
-    $this->db->bind('id', $id);
-    $this->db->execute();
+    if (
+      $this->isTokenValid($data['submitted_by'], $token)
+      && $this->getRole($token) === 'customer'
+      && $this->getStatus($id) === 'pending'
+    ) {
 
-    if ($this->db->rowCount() > 0) {
-      $result['code'] = 200;
-      $result['message'] = "Employee Complaint deleted successfully";
+      $id_card = $this->getDoc($id, 'id_card');
+      $complaint_report = $this->getDoc($id, 'complaint_report');
+
+      $this->db->query("DELETE FROM {$this->table} WHERE id=:id");
+      $this->db->bind('id', $id);
+      $this->db->execute();
+
+      if ($this->db->rowCount() > 0) {
+        $result['code'] = 200;
+        $result['message'] = "Employee Complaint deleted successfully";
+        if ($id_card !== null) $this->deleteDoc($id_card);
+        if ($complaint_report !== null) $this->deleteDoc($complaint_report);
+      } else {
+        $result['code'] = 400;
+        $result['message'] = "Employee Complaint failed to delete";
+      }
     } else {
-      $result['code'] = 400;
-      $result['message'] = "Employee Complaint failed to delete";
+      $result['code'] = 401;
+      $result['message'] = "Unauthorized";
     }
 
     return $result;
@@ -239,16 +254,18 @@ final class EmployeeRepository
     return $result;
   }
 
-  private function deleteDoc($id, $key)
+  private function getDoc($id, $key)
   {
     $this->db->query("SELECT {$key} FROM {$this->table} WHERE id=:id");
     $this->db->bind('id', $id);
     $data = $this->db->single();
-    if (isset($data[$key])) {
-      $doc_name = $data[$key];
-      if (file_exists(__DIR__ . '/../../api/' . $doc_name)) {
-        unlink(__DIR__ . '/../../api/' . $doc_name);
-      }
+    return isset($data[$key]) ? $data[$key] : null;
+  }
+
+  private function deleteDoc($doc_path)
+  {
+    if (file_exists(__DIR__ . '/../../api/' . $doc_path)) {
+      unlink(__DIR__ . '/../../api/' . $doc_path);
     }
   }
 }

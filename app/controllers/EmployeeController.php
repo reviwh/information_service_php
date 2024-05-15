@@ -121,6 +121,21 @@ class EmployeeController extends Controller
 
   public function delete($id)
   {
-    // TODO: Implement delete() method.
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      if (isset($_POST['submitted_by'])) {
+        $data = $this->repository('EmployeeRepository')->delete($id, $_POST);
+        http_response_code($data["code"]);
+        $response = new Response($data['message']);
+        echo $response->send();
+      } else {
+        http_response_code(401);
+        $response = new Response('Unauthorized');
+        echo $response->send();
+      }
+    } else {
+      http_response_code(405);
+      $response = new Response('Method not allowed, please use POST');
+      echo $response->send();
+    }
   }
 }
