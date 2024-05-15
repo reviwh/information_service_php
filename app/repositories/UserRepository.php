@@ -3,7 +3,7 @@
 final class UserRepository
 {
   private $table = 'tb_users';
-  private $role = ["admin", "user"];
+  private $role = ["admin", "customer"];
   private $db;
 
   public function __construct()
