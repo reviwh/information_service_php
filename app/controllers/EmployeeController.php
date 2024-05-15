@@ -24,12 +24,12 @@ class EmployeeController extends Controller
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if (
-        isset($_POST['reporter']) &&
-        isset($_POST['no_telp']) &&
-        isset($_FILES['id_card']) &&
-        isset($_POST['id_number']) &&
-        isset($_FILES['complaint_report']) &&
-        isset($_POST['submitted_by'])
+        isset($_POST['reporter'])
+        && isset($_POST['no_telp'])
+        && isset($_FILES['id_card'])
+        && isset($_POST['id_number'])
+        && isset($_FILES['complaint_report'])
+        && isset($_POST['submitted_by'])
       ) {
         if ($_FILES['id_card']['type'] === 'application/pdf' && $_FILES['complaint_report']['type'] === 'application/pdf') {
           $_POST['id_card'] = $_FILES['id_card'];
@@ -60,10 +60,10 @@ class EmployeeController extends Controller
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($field === null && $value === null) {
         if (
-          isset($_POST['reporter']) &&
-          isset($_POST['no_telp']) &&
-          isset($_POST['id_number']) &&
-          isset($_POST['submitted_by'])
+          isset($_POST['reporter'])
+          && isset($_POST['no_telp'])
+          && isset($_POST['id_number'])
+          && isset($_POST['submitted_by'])
         ) {
           if (
             isset($_FILES['id_card']) && $_FILES['id_card']['type'] === 'application/pdf'

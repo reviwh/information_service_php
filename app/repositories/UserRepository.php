@@ -52,8 +52,8 @@ final class UserRepository
 
           $this->db->query(
             "INSERT INTO {$this->table} 
-        (name, email, password, no_telp, id_card, address, role, token) 
-        VALUES (:name, :email, :password, :no_telp, :id_card, :address, :role, :token)"
+             (name, email, password, no_telp, id_card, address, role, token) 
+             VALUES (:name, :email, :password, :no_telp, :id_card, :address, :role, :token)"
           );
 
           $this->db->bind('name', $data['name']);
@@ -130,8 +130,8 @@ final class UserRepository
             if (isset($id_card_desc['path'])) {
               $this->db->query(
                 "UPDATE {$this->table} 
-             SET name=:name, email=:email, no_telp=:no_telp, id_card=:id_card, address=:address, role=:role
-             WHERE id=:id"
+                  SET name=:name, email=:email, no_telp=:no_telp, id_card=:id_card, address=:address, role=:role
+                  WHERE id=:id"
               );
 
               $this->db->bind('name', $data['name']);
@@ -237,8 +237,8 @@ final class UserRepository
   private function saveIdCard($id_card)
   {
     $result = array();
-    if (move_uploaded_file($id_card['tmp_name'], __DIR__ . '/../../api/storage/user/' . date('YmdHis') . $id_card['name'])) {
-      $result['path'] = '/storage/user/' . date('YmdHis') . $id_card['name'];
+    if (move_uploaded_file($id_card['tmp_name'], __DIR__ . '/../../api/storage/user/' . date('YmdHis') . '_' . $id_card['name'])) {
+      $result['path'] = '/storage/user/' . date('YmdHis') . '_' . $id_card['name'];
     }
     return $result;
   }

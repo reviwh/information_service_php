@@ -48,12 +48,12 @@ class UserController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (
-                isset($_POST['name']) &&
-                isset($_POST['email']) &&
-                isset($_POST['no_telp']) &&
-                isset($_POST['password']) &&
-                isset($_POST['address']) &&
-                isset($_POST['role'])
+                isset($_POST['name'])
+                && isset($_POST['email'])
+                && isset($_POST['no_telp'])
+                && isset($_POST['password'])
+                && isset($_POST['address'])
+                && isset($_POST['role'])
             ) {
                 if (isset($_FILES['id_card'])) {
                     $id_card = $_FILES['id_card'];
@@ -88,12 +88,12 @@ class UserController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (
-                isset($_POST['name']) &&
-                isset($_POST['email']) &&
-                isset($_POST['no_telp']) &&
-                isset($_POST['address']) &&
-                isset($_POST['role']) &&
-                isset($_POST['token'])
+                isset($_POST['name'])
+                && isset($_POST['email'])
+                && isset($_POST['no_telp'])
+                && isset($_POST['address'])
+                && isset($_POST['role'])
+                && isset($_POST['token'])
             ) {
                 $id_card = isset($_FILES['id_card']) ? $_FILES['id_card'] : null;
                 $data = $this->repository('UserRepository')->update($id, $_POST, $id_card);

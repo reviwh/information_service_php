@@ -106,9 +106,10 @@ final class EmployeeRepository
     $role = $this->getRole($token);
 
     if (
-      $role === 'customer' &&
-      $field === null &&
-      $this->isTokenValid($data['submitted_by'], $token)
+      $role === 'customer'
+      && $field === null
+      && $this->isTokenValid($data['submitted_by'], $token)
+      && $this->getStatus($id) === 'pending'
     ) {
       $id_card = $data['id_card'] ?? null;
       $complaint_report = $data['complaint_report'] ?? null;
@@ -150,9 +151,9 @@ final class EmployeeRepository
         $result['message'] = "Update failed.";
       }
     } else if (
-      $role === 'admin' &&
-      $field !== null &&
-      $this->isTokenValid($data['submitted_by'], $token)
+      $role === 'admin'
+      && $field !== null
+      && $this->isTokenValid($data['submitted_by'], $token)
     ) {
       $this->db->query("UPDATE {$this->table} SET {$field}=:value WHERE id=:id");
       $this->db->bind('value', $data[$field]);
@@ -174,8 +175,32 @@ final class EmployeeRepository
     return $result;
   }
 
-  public function delete($id)
+  public function delete($id, $data)
   {
+    $result = array();
+    $token = $data['token'];
+
+    $this->db->query("DELETE FROM {$this->table} WHERE id=:id");
+    $this->db->bind('id', $id);
+    $this->db->execute();
+
+    if ($this->db->rowCount() > 0) {
+      $result['code'] = 200;
+      $result['message'] = "Employee Complaint deleted successfully";
+    } else {
+      $result['code'] = 400;
+      $result['message'] = "Employee Complaint failed to delete";
+    }
+
+    return $result;
+  }
+
+  private function getStatus($id)
+  {
+    $this->db->query("SELECT status FROM {$this->table} WHERE id=:id");
+    $this->db->bind('id', $id);
+    $data = $this->db->single();
+    return $data['status'] ?? "";
   }
 
   private function getUser($id)
