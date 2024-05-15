@@ -11,4 +11,57 @@ class EmployeeController extends Controller
     $response = new Response($data['message'], $data['data']);
     echo $response->send();
   }
+
+  public function list($id)
+  {
+    $data = $this->repository('EmployeeRepository')->getByUserId($id);
+    http_response_code($data["code"]);
+    $response = new Response($data['message'], $data['data']);
+    echo $response->send();
+  }
+
+  public function create()
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      if (
+        isset($_POST['reporter']) &&
+        isset($_POST['no_telp']) &&
+        isset($_FILES['id_card']) &&
+        isset($_POST['id_number']) &&
+        isset($_FILES['complaint_report']) &&
+        isset($_POST['submitted_by'])
+      ) {
+        if ($_FILES['id_card']['type'] === 'application/pdf' && $_FILES['complaint_report']['type'] === 'application/pdf') {
+          $_POST['id_card'] = $_FILES['id_card'];
+          $_POST['complaint_report'] = $_FILES['complaint_report'];
+
+          $data = $this->repository('EmployeeRepository')->create($_POST);
+          http_response_code($data["code"]);
+          $response = new Response($data['message']);
+          echo $response->send();
+        } else {
+          http_response_code(400);
+          $response = new Response('Invalid file type');
+        }
+      } else {
+        http_response_code(400);
+        $response = new Response('All fields are required');
+        echo $response->send();
+      }
+    } else {
+      http_response_code(405);
+      $response = new Response('Method not allowed, please use POST');
+      echo $response->send();
+    }
+  }
+
+  public function edit($id, $field = null, $value = null)
+  {
+    // TODO: Implement update() method.
+  }
+
+  public function delete($id)
+  {
+    // TODO: Implement delete() method.
+  }
 }

@@ -26,13 +26,13 @@ Retrieve user information based on the provided user ID.
 
 #### Path Parameter
 
-| name | required | datatype |
+| Name | Required | Datatype |
 | :--- | :------: | :------: |
-| id   |  `true`  | integer  |
+| id   |  `true`  | number  |
 
 #### Field
 
-| name  | required | datatype |
+| Name  | Required | Datatype |
 | :---- | :------: | :------: |
 | token |  `true`  |  string  |
 
@@ -57,11 +57,11 @@ Retrieve user information based on the provided user ID.
 
 Endpoint: `POST /user/login`
 
-login user
+Authenticate a user.
 
 #### Field
 
-| name     | required | datatype |
+| Name     | Required | Datatype |
 | :------- | :------: | :------: |
 | email    |  `true`  |  string  |
 | password |  `true`  |  string  |
@@ -87,15 +87,16 @@ login user
 
 Endpoint: `POST /user/register`
 
-register user
+Register a new user.
 
 #### Field
 
-| name     | required | datatype                     |
+| Name     | Required | Datatype                     |
 | :------- | :------: | :--------------------------- |
 | name     |  `true`  | string                       |
 | email    |  `true`  | string                       |
 | no_telp  |  `true`  | string                       |
+| id_card  |  `true`  | File: `pdf`                  |
 | password |  `true`  | string                       |
 | address  |  `true`  | string                       |
 | role     |  `true`  | Enum: `"admin"` `"customer"` |
@@ -113,24 +114,26 @@ register user
 
 Endpoint: `POST /user/edit/{id}`
 
-edit user
+Edit user information.
 
 #### Path Parameter
 
-| name | required | datatype |
+| Name | Required | Datatype |
 | :--- | :------: | :------: |
-| id   |  `true`  | integer  |
+| id   |  `true`  | number  |
 
 #### Field
 
-| name     | required | datatype                     |
+| name     | Required | Datatype                     |
 | :------- | :------: | :--------------------------- |
 | name     |  `true`  | string                       |
 | email    |  `true`  | string                       |
 | no_telp  |  `true`  | string                       |
+| id_card  |  `false`  | File: `pdf`                  |
 | password |  `true`  | string                       |
 | address  |  `true`  | string                       |
 | role     |  `true`  | Enum: `"admin"` `"customer"` |
+| token    |  `true`  | string                       |
 
 #### Response
 
@@ -161,11 +164,73 @@ Retrieve list of employee complaints.
       "id_number": "string",
       "complaint_report": "string",
       "status": "string",
-      "submitted_by": 1
+      "submitted_by": 0
     }
   ]
 }
 ```
+
+### Get Employee Complaints by User ID
+
+Endpoint: `GET /employee/list/{id}`
+
+Retrieve the list of employee complaints for a specific user.
+
+#### Path Parameter
+
+| name | Required | Datatype |
+| :--- | :------: | :------: |
+| id   |  `true`  | number  |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": [
+    {
+      "id": 0,
+      "reporter": "string",
+      "no_telp": "string",
+      "id_card": "string",
+      "id_number": "string",
+      "complaint_report": "string",
+      "status": "string",
+      "submitted_by": 0
+    }
+  ]
+}
+```
+
+### Create Employee Complaints
+
+Endpoint: `POST /employee/create`
+
+Create a new employee complaint.
+
+#### Field
+
+| Name | Required | Datatype |
+| --- | :---: | :--- |
+| reporter | `true` | string |
+| no_telp | `true` | string |
+| id_card | `true` | File: `pdf` |
+| id_number | `true` | string |
+| complaint_report | `true` | File: `pdf` |
+| submitted_by | `true` | number |
+| token | `true` | string |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+
+
 
 ## Contributors
 
