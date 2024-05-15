@@ -18,7 +18,7 @@ Import the provided [database file](/db_information_service_5_13_24.sql) to set 
 
 ## Documentation
 
-### Get User
+### Get User by ID
 
 Endpoint: `POST /user/{id}`
 
@@ -26,13 +26,15 @@ Retrieve user information based on the provided user ID.
 
 #### Path Parameter
 
-| id  | `required` | integer |
-| :-: | :--------: | :-----: |
+| name | required | datatype |
+| :--- | :------: | :------: |
+| id   |  `true`  | integer  |
 
-#### Body Query
+#### Field
 
-| token | `required` | string |
-| :---: | :--------: | :----: |
+| name  | required | datatype |
+| :---- | :------: | :------: |
+| token |  `true`  |  string  |
 
 #### Response
 
@@ -48,6 +50,94 @@ Retrieve user information based on the provided user ID.
     "address": "string",
     "role": "string"
   }
+}
+```
+
+### Login User
+
+Endpoint: `POST /user/login`
+
+login user
+
+#### Field
+
+| name     | required | datatype |
+| :------- | :------: | :------: |
+| email    |  `true`  |  string  |
+| password |  `true`  |  string  |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": {
+    "id": 0,
+    "name": "string",
+    "email": "string",
+    "no_telp": "string",
+    "id_card": "string",
+    "role": "string",
+    "token": "string"
+  }
+}
+```
+
+### Register User
+
+Endpoint: `POST /user/register`
+
+register user
+
+#### Field
+
+| name     | required | datatype                     |
+| :------- | :------: | :--------------------------- |
+| name     |  `true`  | string                       |
+| email    |  `true`  | string                       |
+| no_telp  |  `true`  | string                       |
+| password |  `true`  | string                       |
+| address  |  `true`  | string                       |
+| role     |  `true`  | Enum: `"admin"` `"customer"` |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Edit User
+
+Endpoint: `POST /user/edit/{id}`
+
+edit user
+
+#### Path Parameter
+
+| name | required | datatype |
+| :--- | :------: | :------: |
+| id   |  `true`  | integer  |
+
+#### Field
+
+| name     | required | datatype                     |
+| :------- | :------: | :--------------------------- |
+| name     |  `true`  | string                       |
+| email    |  `true`  | string                       |
+| no_telp  |  `true`  | string                       |
+| password |  `true`  | string                       |
+| address  |  `true`  | string                       |
+| role     |  `true`  | Enum: `"admin"` `"customer"` |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
 }
 ```
 

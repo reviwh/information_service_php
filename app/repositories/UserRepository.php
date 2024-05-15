@@ -120,23 +120,50 @@ final class UserRepository
     $result = array();
 
     if ($data['token'] === $this->getToken($id)) {
-      if (in_array($data['role'], $this->role)) {
-        if ($id_card !== null) {
-          $this->deleteIdCard($id);
+      if (!$this->isEmailViolated($id, $data['email'])) {
+        if (in_array($data['role'], $this->role)) {
+          if ($id_card !== null) {
+            $this->deleteIdCard($id);
 
-          $id_card_desc = $this->saveIdCard($id_card);
+            $id_card_desc = $this->saveIdCard($id_card);
 
-          if (isset($id_card_desc['path'])) {
-            $this->db->query(
-              "UPDATE {$this->table} 
+            if (isset($id_card_desc['path'])) {
+              $this->db->query(
+                "UPDATE {$this->table} 
              SET name=:name, email=:email, no_telp=:no_telp, id_card=:id_card, address=:address, role=:role
              WHERE id=:id"
+              );
+
+              $this->db->bind('name', $data['name']);
+              $this->db->bind('email', $data['email']);
+              $this->db->bind('no_telp', $data['no_telp']);
+              $this->db->bind('id_card', $id_card_desc['path']);
+              $this->db->bind('address', $data['address']);
+              $this->db->bind('role', $data['role']);
+              $this->db->bind('id', $id);
+              $this->db->execute();
+
+              if ($this->db->rowCount() > 0) {
+                $result['code'] = 200;
+                $result['message'] = "Update success.";
+              } else {
+                $result['code'] = 400;
+                $result['message'] = "Update failed.";
+              }
+            } else {
+              $result['code'] = 400;
+              $result['message'] = "Unknown path";
+            }
+          } else {
+            $this->db->query(
+              "UPDATE {$this->table} 
+           SET name=:name, email=:email, no_telp=:no_telp, address=:address, role=:role
+           WHERE id=:id"
             );
 
             $this->db->bind('name', $data['name']);
             $this->db->bind('email', $data['email']);
             $this->db->bind('no_telp', $data['no_telp']);
-            $this->db->bind('id_card', $id_card_desc['path']);
             $this->db->bind('address', $data['address']);
             $this->db->bind('role', $data['role']);
             $this->db->bind('id', $id);
@@ -149,36 +176,14 @@ final class UserRepository
               $result['code'] = 400;
               $result['message'] = "Update failed.";
             }
-          } else {
-            $result['code'] = 400;
-            $result['message'] = "Unknown path";
           }
         } else {
-          $this->db->query(
-            "UPDATE {$this->table} 
-           SET name=:name, email=:email, no_telp=:no_telp, address=:address, role=:role
-           WHERE id=:id"
-          );
-
-          $this->db->bind('name', $data['name']);
-          $this->db->bind('email', $data['email']);
-          $this->db->bind('no_telp', $data['no_telp']);
-          $this->db->bind('address', $data['address']);
-          $this->db->bind('role', $data['role']);
-          $this->db->bind('id', $id);
-          $this->db->execute();
-
-          if ($this->db->rowCount() > 0) {
-            $result['code'] = 200;
-            $result['message'] = "Update success.";
-          } else {
-            $result['code'] = 400;
-            $result['message'] = "Update failed.";
-          }
+          $result['code'] = 400;
+          $result['message'] = "Role is unavailable.";
         }
       } else {
         $result['code'] = 400;
-        $result['message'] = "Role is unavailable.";
+        $result['message'] = 'Email is unavailable.';
       }
     } else {
       $result['code'] = 401;
@@ -194,6 +199,15 @@ final class UserRepository
     $this->db->bind('email', $email);
     $this->db->execute();
     return $this->db->rowCount() <= 0;
+  }
+
+  private function isEmailViolated($id, $email)
+  {
+    $this->db->query("SELECT email FROM {$this->table} WHERE (NOT id=:id) AND email=:email");
+    $this->db->bind('id', $id);
+    $this->db->bind('email', $email);
+    $this->db->execute();
+    return $this->db->rowCount() > 0;
   }
 
   private function getPassword($email)
