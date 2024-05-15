@@ -237,8 +237,9 @@ final class UserRepository
   private function saveIdCard($id_card)
   {
     $result = array();
-    if (move_uploaded_file($id_card['tmp_name'], __DIR__ . '/../../api/storage/user/' . date('YmdHis') . '_' . $id_card['name'])) {
-      $result['path'] = '/storage/user/' . date('YmdHis') . '_' . $id_card['name'];
+    $date = date('YmdHis');
+    if (move_uploaded_file($id_card['tmp_name'], __DIR__ . '/../../api/storage/user/' . $date . '_' . $id_card['name'])) {
+      $result['path'] = '/storage/user/' . $date . '_' . $id_card['name'];
     }
     return $result;
   }
