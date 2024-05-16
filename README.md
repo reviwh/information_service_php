@@ -709,7 +709,7 @@ Delete an JMS.
 
 #### Endpoint:
 
-`GET /employee`
+`GET /legal`
 
 Retrieve list of legal counselings.
 
@@ -737,7 +737,7 @@ Retrieve list of legal counselings.
 
 #### Endpoint:
 
-`GET /employee/list/{id}`
+`GET /legal/list/{id}`
 
 Retrieve the list of legal counselings for a specific user.
 
@@ -892,10 +892,197 @@ Delete a legal counseling.
 }
 ```
 
-## Contributors
+### Get All Beliefs Control
+
+#### Endpoint:
+
+`GET /belief`
+
+Retrieve list of beliefs control.
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": [
+    {
+      "id": 0,
+      "reporter": "string",
+      "no_telp": "string",
+      "id_card": "string",
+      "id_number": "string",
+      "complaint_report": "string",
+      "status": "string",
+      "submitted_by": 0
+    }
+  ]
+}
+```
+
+### Get Beliefs Control by User ID
+
+#### Endpoint:
+
+`GET /belief/list/{id}`
+
+Retrieve the list of beliefs control for a specific user.
+
+#### Path Parameter
+
+| name | Required | Datatype |
+| :--- | :------: | :------: |
+| id   |  `true`  |  number  |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": [
+    {
+      "id": 0,
+      "reporter": "string",
+      "no_telp": "string",
+      "id_card": "string",
+      "id_number": "string",
+      "complaint_report": "string",
+      "status": "string",
+      "submitted_by": 0
+    }
+  ]
+}
+```
+
+### Create Belief Control
+
+#### Endpoint:
+
+`POST /belief/create`
+
+Create a new belief control.
+
+#### Field
+
+| Name             | Required | Datatype    |
+| ---------------- | :------: | :---------- |
+| reporter         |  `true`  | string      |
+| no_telp          |  `true`  | string      |
+| id_card          |  `true`  | File: `pdf` |
+| id_number        |  `true`  | string      |
+| complaint_report |  `true`  | File: `pdf` |
+| submitted_by     |  `true`  | number      |
+| token            |  `true`  | string      |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Update Belief Control
+
+#### Endpoint:
+
+`POST /belief/edit/{id}`
+
+Update an existing belief control.
+
+#### Path Parameter
+
+| Name | Required | Datatype |
+| ---- | :------: | -------- |
+| id   |  `true`  | string   |
+
+#### Field
+
+| Name             | Required | Datatype    |
+| ---------------- | :------: | :---------- |
+| reporter         |  `true`  | string      |
+| no_telp          |  `true`  | string      |
+| id_card          | `false`  | File: `pdf` |
+| id_number        |  `true`  | string      |
+| complaint_report | `false`  | File: `pdf` |
+| submitted_by     |  `true`  | number      |
+| token            |  `true`  | string      |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Update Belief Control Status
+
+#### Endpoint:
+
+`POST /belief/edit/{id}/status/{status}`
+
+Update the status of an belief control.
+
+#### Path Parameter
+
+| Name   | Required | Datatype                             |
+| ------ | :------: | ------------------------------------ |
+| id     |  `true`  | string                               |
+| status |  `true`  | Enum: `pending` `approve` `rejected` |
+
+#### Field
+
+| Name         | Required | Datatype |
+| ------------ | :------: | :------- |
+| submitted_by |  `true`  | number   |
+| token        |  `true`  | string   |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Delete Belief Control
+
+#### Endpoint:
+
+`POST /belief/delete/{id}`
+
+Delete an belief control.
+
+#### Path Parameter
+
+| Name | Required | Datatype |
+| ---- | :------: | -------- |
+| id   |  `true`  | string   |
+
+#### Field
+
+| Name         | Required | Datatype |
+| ------------ | :------: | :------- |
+| submitted_by |  `true`  | number   |
+| token        |  `true`  | string   |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+<!-- ## Contributors
 
 | [![Revi Wardana Putra](https://avatars.githubusercontent.com/reviwh?s=100)<br /><sub>Revi Wardana Putra</sub>](https://github.com/reviwh) | [![Nathalia Bruno](https://avatars.githubusercontent.com/ihsan005?s=100)<br /><sub>Ihsan Shadiq</sub>](https://github.com/ihsan005) | <img src="https://avatars.githubusercontent.com/IkhsanoMulya" alt="Ikhsano Mulya" width=100 /><br /><sub>[Ikhsano Mulya](https://github.com/IkhsanoMulya)</sub> |
-| :---------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| :---------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------: | -->
 
 ## License
 
