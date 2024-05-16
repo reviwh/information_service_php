@@ -42,6 +42,7 @@ class EmployeeController extends Controller
         } else {
           http_response_code(400);
           $response = new Response('Invalid file type');
+          echo $response->send();
         }
       } else {
         http_response_code(400);
