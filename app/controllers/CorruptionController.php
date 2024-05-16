@@ -93,6 +93,11 @@ class CorruptionController extends Controller
             http_response_code($data["code"]);
             $response = new Response($data['message']);
             echo $response->send();
+          } else if (!isset($_FILES['id_card']) && !isset($_FILES['complaint_report'])) {
+            $data = $this->repository('CorruptionRepository')->update($id, $_POST);
+            http_response_code($data["code"]);
+            $response = new Response($data['message']);
+            echo $response->send();
           } else {
             http_response_code(400);
             $response = new Response('Accepted file type of ID card and Complaint Report is only PDF');
