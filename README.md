@@ -1266,6 +1266,57 @@ Delete an election post.
 }
 ```
 
+### Get Users Survey
+
+#### Endpoint:
+
+`GET /survey`
+
+Retrieve list of users survey.
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": [
+    {
+      "email": "string",
+      "rating": 0,
+      "suggestion": "string",
+      "category": 0,
+      "created_at": "datetime"
+    }
+  ]
+}
+```
+
+### Create User Survey
+
+#### Endpoint:
+
+`POST /survey/create`
+
+Create a new user survey.
+
+#### Field
+
+| Name             | Required | Datatype    |
+| ---------------- | :------: | :---------- |
+| email            |  `true`  | string      |
+| rating           |  `true`  | number      |
+| suggestion       |  `false`  | string      |
+| category         |  `true`  | number      |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
 
 <!-- ## Contributors
 
