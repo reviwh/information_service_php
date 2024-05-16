@@ -7,7 +7,7 @@ final class EmployeeRepository
     'tb_user' => [
       'table' => 'tb_users',
       'field' => [
-        'from' => 'id_user',
+        'from' => 'id',
         'to' => 'submitted_by'
       ]
     ]
@@ -69,8 +69,8 @@ final class EmployeeRepository
       if (isset($id_card_desc['path']) && isset($complaint_report_desc['path'])) {
         $this->db->query(
           "INSERT INTO {$this->table} 
-        (reporter, no_telp, id_card, id_number, complaint_report, status, submitted_by) 
-        VALUES (:reporter, :no_telp, :id_card, :id_number, :complaint_report, 'pending', :submitted_by)"
+          (reporter, no_telp, id_card, id_number, complaint_report, status, submitted_by) 
+          VALUES (:reporter, :no_telp, :id_card, :id_number, :complaint_report, 'pending', :submitted_by)"
         );
 
         $this->db->bind('reporter', $data['reporter']);
