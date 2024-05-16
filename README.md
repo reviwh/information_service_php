@@ -368,7 +368,7 @@ Retrieve list of corruption complaints.
 }
 ```
 
-### Get corruption Complaint by User ID
+### Get Corruption Complaint by User ID
 
 #### Endpoint:
 
@@ -403,7 +403,7 @@ Retrieve the list of corruption complaints for a specific user.
 }
 ```
 
-### Create corruption Complaint
+### Create Corruption Complaint
 
 #### Endpoint:
 
@@ -433,7 +433,7 @@ Create a new corruption complaint.
 }
 ```
 
-### Update corruption Complaint
+### Update Corruption Complaint
 
 #### Endpoint:
 
@@ -469,13 +469,13 @@ Update an existing corruption complaint.
 }
 ```
 
-### Update corruption Complaint Status
+### Update Corruption Complaint Status
 
 #### Endpoint:
 
 `POST /corruption/edit/{id}/status/{status}`
 
-Update the status of an corruption complaint.
+Update the status of a corruption complaint.
 
 #### Path Parameter
 
@@ -500,13 +500,188 @@ Update the status of an corruption complaint.
 }
 ```
 
-### Delete corruption Complaint
+### Delete Corruption Complaint
 
 #### Endpoint:
 
 `POST /corruption/delte/{id}`
 
-Delete an corruption complaint.
+Delete a corruption complaint.
+
+#### Path Parameter
+
+| Name   | Required | Datatype |
+| ------ | :------: | -------- |
+| id     |  `true`  | string   |
+
+#### Field
+
+| Name         | Required | Datatype |
+| ------------ | :------: | :------- |
+| submitted_by |  `true`  | number   |
+| token        |  `true`  | string   |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Get All JMS
+
+#### Endpoint:
+
+`GET /jms`
+
+Retrieve list of JMS.
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": [
+    {
+      "id": 0,
+      "intended_school": "string",
+      "applicant": "string",
+      "status": "string",
+      "submitted_by": 0
+    }
+  ]
+}
+```
+
+### Get JMS by User ID
+
+#### Endpoint:
+
+`GET /jms/list/{id}`
+
+Retrieve the list of JMS for a specific user.
+
+#### Path Parameter
+
+| name | Required | Datatype |
+| :--- | :------: | :------: |
+| id   |  `true`  |  number  |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": [
+    {
+      "id": 0,
+      "intended_school": "string",
+      "applicant": "string",
+      "status": "string",
+      "submitted_by": 0
+    }
+  ]
+}
+```
+
+### Create JMS
+
+#### Endpoint:
+
+`POST /jms/create`
+
+Create a new JMS.
+
+#### Field
+
+| Name             | Required | Datatype    |
+| ---------------- | :------: | :---------- |
+| intented_school  |  `true`  | string      |
+| applicant        |  `true`  | string      |
+| submitted_by     |  `true`  | number      |
+| token            |  `true`  | string      |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Update JMS
+
+#### Endpoint:
+
+`POST /jms/edit/{id}`
+
+Update an existing JMS.
+
+#### Path Parameter
+
+| Name | Required | Datatype |
+| ---- | :------: | -------- |
+| id   |  `true`  | string   |
+
+#### Field
+
+| Name             | Required | Datatype    |
+| ---------------- | :------: | :---------- |
+| intented_school  |  `true`  | string      |
+| applicant        |  `true`  | string      |
+| submitted_by     |  `true`  | number      |
+| token            |  `true`  | string      |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Update JMS Status
+
+#### Endpoint:
+
+`POST /jms/edit/{id}/status/{status}`
+
+Update the status of a JMS.
+
+#### Path Parameter
+
+| Name   | Required | Datatype                             |
+| ------ | :------: | ------------------------------------ |
+| id     |  `true`  | string                               |
+| status |  `true`  | Enum: `pending` `approve` `rejected` |
+
+#### Field
+
+| Name         | Required | Datatype |
+| ------------ | :------: | :------- |
+| submitted_by |  `true`  | number   |
+| token        |  `true`  | string   |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Delete JMS
+
+#### Endpoint:
+
+`POST /jms/delte/{id}`
+
+Delete an JMS.
 
 #### Path Parameter
 
