@@ -313,15 +313,15 @@ Update the status of an employee complaint.
 
 #### Endpoint:
 
-`POST /employee/delte/{id}`
+`POST /employee/delete/{id}`
 
 Delete an employee complaint.
 
 #### Path Parameter
 
-| Name   | Required | Datatype |
-| ------ | :------: | -------- |
-| id     |  `true`  | string   |
+| Name | Required | Datatype |
+| ---- | :------: | -------- |
+| id   |  `true`  | string   |
 
 #### Field
 
@@ -504,15 +504,15 @@ Update the status of a corruption complaint.
 
 #### Endpoint:
 
-`POST /corruption/delte/{id}`
+`POST /corruption/delete/{id}`
 
 Delete a corruption complaint.
 
 #### Path Parameter
 
-| Name   | Required | Datatype |
-| ------ | :------: | -------- |
-| id     |  `true`  | string   |
+| Name | Required | Datatype |
+| ---- | :------: | -------- |
+| id   |  `true`  | string   |
 
 #### Field
 
@@ -596,12 +596,12 @@ Create a new JMS.
 
 #### Field
 
-| Name             | Required | Datatype    |
-| ---------------- | :------: | :---------- |
-| intented_school  |  `true`  | string      |
-| applicant        |  `true`  | string      |
-| submitted_by     |  `true`  | number      |
-| token            |  `true`  | string      |
+| Name            | Required | Datatype |
+| --------------- | :------: | :------- |
+| intented_school |  `true`  | string   |
+| applicant       |  `true`  | string   |
+| submitted_by    |  `true`  | number   |
+| token           |  `true`  | string   |
 
 #### Response
 
@@ -628,12 +628,12 @@ Update an existing JMS.
 
 #### Field
 
-| Name             | Required | Datatype    |
-| ---------------- | :------: | :---------- |
-| intented_school  |  `true`  | string      |
-| applicant        |  `true`  | string      |
-| submitted_by     |  `true`  | number      |
-| token            |  `true`  | string      |
+| Name            | Required | Datatype |
+| --------------- | :------: | :------- |
+| intented_school |  `true`  | string   |
+| applicant       |  `true`  | string   |
+| submitted_by    |  `true`  | number   |
+| token           |  `true`  | string   |
 
 #### Response
 
@@ -679,15 +679,202 @@ Update the status of a JMS.
 
 #### Endpoint:
 
-`POST /jms/delte/{id}`
+`POST /jms/delete/{id}`
 
 Delete an JMS.
 
 #### Path Parameter
 
-| Name   | Required | Datatype |
-| ------ | :------: | -------- |
-| id     |  `true`  | string   |
+| Name | Required | Datatype |
+| ---- | :------: | -------- |
+| id   |  `true`  | string   |
+
+#### Field
+
+| Name         | Required | Datatype |
+| ------------ | :------: | :------- |
+| submitted_by |  `true`  | number   |
+| token        |  `true`  | string   |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Get All Legal Counselings
+
+#### Endpoint:
+
+`GET /employee`
+
+Retrieve list of legal counselings.
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": [
+    {
+      "id": 0,
+      "client": "string",
+      "no_telp": "string",
+      "id_card": "string",
+      "id_number": "string",
+      "problem_form": "string",
+      "status": "string",
+      "submitted_by": 0
+    }
+  ]
+}
+```
+
+### Get Legal Counseling by User ID
+
+#### Endpoint:
+
+`GET /employee/list/{id}`
+
+Retrieve the list of legal counselings for a specific user.
+
+#### Path Parameter
+
+| name | Required | Datatype |
+| :--- | :------: | :------: |
+| id   |  `true`  |  number  |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": [
+    {
+      "id": 0,
+      "client": "string",
+      "no_telp": "string",
+      "id_card": "string",
+      "id_number": "string",
+      "problem_form": "string",
+      "status": "string",
+      "submitted_by": 0
+    }
+  ]
+}
+```
+
+### Create Legal Counseling
+
+#### Endpoint:
+
+`POST /legal/create`
+
+Create a new legal counseling.
+
+#### Field
+
+| Name         | Required | Datatype    |
+| ------------ | :------: | :---------- |
+| client       |  `true`  | string      |
+| no_telp      |  `true`  | string      |
+| id_card      | `false`  | File: `pdf` |
+| id_number    |  `true`  | string      |
+| problem_form | `false`  | File: `pdf` |
+| submitted_by |  `true`  | number      |
+| token        |  `true`  | string      |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Update Legal Counseling
+
+#### Endpoint:
+
+`POST /legal/edit/{id}`
+
+Update an existing legal counseling.
+
+#### Path Parameter
+
+| Name | Required | Datatype |
+| ---- | :------: | -------- |
+| id   |  `true`  | string   |
+
+#### Field
+
+| Name         | Required | Datatype    |
+| ------------ | :------: | :---------- |
+| client       |  `true`  | string      |
+| no_telp      |  `true`  | string      |
+| id_card      | `false`  | File: `pdf` |
+| id_number    |  `true`  | string      |
+| problem_form | `false`  | File: `pdf` |
+| submitted_by |  `true`  | number      |
+| token        |  `true`  | string      |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Update Legal Counseling Status
+
+#### Endpoint:
+
+`POST /legal/edit/{id}/status/{status}`
+
+Update the status of an legal counseling.
+
+#### Path Parameter
+
+| Name   | Required | Datatype                             |
+| ------ | :------: | ------------------------------------ |
+| id     |  `true`  | string                               |
+| status |  `true`  | Enum: `pending` `approve` `rejected` |
+
+#### Field
+
+| Name         | Required | Datatype |
+| ------------ | :------: | :------- |
+| submitted_by |  `true`  | number   |
+| token        |  `true`  | string   |
+
+#### Response
+
+```json
+{
+  "message": "string",
+  "data": null
+}
+```
+
+### Delete Legal Counseling
+
+#### Endpoint:
+
+`POST /legal/delete/{id}`
+
+Delete a legal counseling.
+
+#### Path Parameter
+
+| Name | Required | Datatype |
+| ---- | :------: | -------- |
+| id   |  `true`  | string   |
 
 #### Field
 
@@ -708,7 +895,7 @@ Delete an JMS.
 ## Contributors
 
 | [![Revi Wardana Putra](https://avatars.githubusercontent.com/reviwh?s=100)<br /><sub>Revi Wardana Putra</sub>](https://github.com/reviwh) | [![Nathalia Bruno](https://avatars.githubusercontent.com/ihsan005?s=100)<br /><sub>Ihsan Shadiq</sub>](https://github.com/ihsan005) | <img src="https://avatars.githubusercontent.com/IkhsanoMulya" alt="Ikhsano Mulya" width=100 /><br /><sub>[Ikhsano Mulya](https://github.com/IkhsanoMulya)</sub> |
-| :---: | :---: | :---: |
+| :---------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 
 ## License
 
