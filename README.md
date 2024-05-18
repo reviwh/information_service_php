@@ -137,8 +137,6 @@ Edit user information.
 | name     |  `true`  | string                       |
 | email    |  `true`  | string                       |
 | no_telp  |  `true`  | string                       |
-| id_card  | `false`  | File: `pdf`                  |
-| password |  `true`  | string                       |
 | address  |  `true`  | string                       |
 | role     |  `true`  | Enum: `"admin"` `"customer"` |
 | token    |  `true`  | string                       |
